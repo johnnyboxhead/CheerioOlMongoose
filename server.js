@@ -120,7 +120,23 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
+
+app.put("/articles/:id", function(req, res) {
+    console.log(req.body.saved)
+    console.log(req.params.id)
+    db.Article.update({_id: req.params.id}, {$set: {saved: req.body.saved}})
+    .then(function(dbArticle) {
+    // If we were able to successfully update an Article, send it back to the client
+    console.log(dbArticle)
+    // res.json(dbArticle);
+    })
+    .catch(function(err) {
+    // If an error occurred, send it to the client
+    res.json(err);
+  });
+})
 // Start the server
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
 });
+

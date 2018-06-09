@@ -88,10 +88,10 @@ $.getJSON("/articles", function(data) {
         // Grab the id associated with the article from the submit button
         console.log("save button is working")
         var buttonId = $(this).attr("button_id");
-        
+        console.log(buttonId)
         // Run a POST request to change the note, using what's entered in the inputs
         $.ajax({
-        method: "POST",
+        method: "PUT",
         url: "/articles/" + buttonId,
         data: {
             // Value taken from title input

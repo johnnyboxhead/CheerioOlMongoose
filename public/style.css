@@ -1,5 +1,6 @@
 body{
-    background: url("OuterBanks.jpg") no-repeat center center; 
+    background: url("OuterBanks.jpg") no-repeat top center fixed; 
+    margin-top: 0%;
 }
 
 .articlediv {

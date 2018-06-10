@@ -5,7 +5,7 @@ $.getJSON("/articles/unsaved", function(data) {
     // For each one
     for (var i = 0; i < data.length; i++) {
       // Display the apropos information on the page
-      $("#articles").append("<div class='articlediv'> <p data-id='" + data[i]._id + "'>" + data[i].title + "<button class='savebutton' button_id="+data[i]._id+">Save Article</button><button class='notebutton' data_id="+data[i]._id+">Leave Note</button><br />" + data[i].link + "</p>"+"<div class='modal' id='myModal'><div class='modal-content'>"+"<span class='close'>&times;</span>Update Notes</div><textarea id='bodyinput' name='body'></textarea><button data_id='" + data[i]._id + "' id='savenote'>Save Note</button></div></div>");
+      $("#articles").append("<div class='articlediv'> <p data-id='" + data[i]._id + "'>" + data[i].title + "<button class='savebutton' button_id="+data[i]._id+">Save Article</button><button class='notebutton' data_id="+data[i]._id+">Leave Note</button><br />" + data[i].link + "</p>"+"<div class='modal' id='myModal'><div class='modal-content'>"+"<span class='close'>&times;</span><p>Update Notes</p><textarea id='bodyinput' name='body'></textarea><button data_id='" + data[i]._id + "' id='savenote'>Save Note</button></div></div></div>");
     }
   });
   
@@ -15,10 +15,10 @@ $.getJSON("/articles/unsaved", function(data) {
         console.log("The saved articles button is working")
         $.getJSON("/articles/saved", function(data) {
             // For each one
-            console.log("Data from the return looks like: "+data[0]._id)
+            // console.log("Data from the return looks like: "+data[0]._id)
             for (var i = 0; i < data.length; i++) {
               // Display the apropos information on the page
-              $("#articles").append("<div class='articlediv'> <p data-id='" + data[i]._id + "'>" + data[i].title + "<button class='unsavebutton' button_id="+data[i]._id+">Unsave Article</button><button class='notebutton' data_id="+data[i]._id+">Leave Note</button><br />" + data[i].link + "</p>"+"<div class='modal' id='myModal'><div class='modal-content'>"+"<span class='close'>&times;</span>Update Notes</div><textarea id='bodyinput' name='body'></textarea><button data_id='" + data[i]._id + "' id='savenote'>Save Note</button></div></div>");
+              $("#articles").append("<div class='articlediv'> <p data-id='" + data[i]._id + "'>" + data[i].title + "<button class='unsavebutton' button_id="+data[i]._id+">Unsave Article</button><button class='notebutton' data_id="+data[i]._id+">Leave Note</button><br />" + data[i].link + "</p>"+"<div class='modal' id='myModal'><div class='modal-content'>"+"<span class='close'>&times;</span><p>Update Notes</p><textarea id='bodyinput' name='body'></textarea><button data_id='" + data[i]._id + "' id='savenote'>Save Note</button></div></div></div>");
             }
         });
     }) 

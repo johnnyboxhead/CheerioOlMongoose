@@ -1,7 +1,7 @@
 var thisID
 
 // Grab the articles as a json
-$.getJSON("/articles", function(data) {
+$.getJSON("/articles/unsaved", function(data) {
     // For each one
     for (var i = 0; i < data.length; i++) {
       // Display the apropos information on the page
@@ -10,30 +10,43 @@ $.getJSON("/articles", function(data) {
   });
   
   $(document).ready(function(){
-    
+    $(document).on("click", "#savedArticles", function() {
+        $("#articles").empty()
+        console.log("The saved articles button is working")
+        $.getJSON("/articles/saved", function(data) {
+            // For each one
+            console.log("Data from the return looks like: "+data[0]._id)
+            for (var i = 0; i < data.length; i++) {
+              // Display the apropos information on the page
+              $("#articles").append("<div class='articlediv'> <p data-id='" + data[i]._id + "'>" + data[i].title + "<button class='unsavebutton' button_id="+data[i]._id+">Unsave Article</button><button class='notebutton' data_id="+data[i]._id+">Leave Note</button><br />" + data[i].link + "</p>"+"<div class='modal' id='myModal'><div class='modal-content'>"+"<span class='close'>&times;</span>Update Notes</div><textarea id='bodyinput' name='body'></textarea><button data_id='" + data[i]._id + "' id='savenote'>Save Note</button></div></div>");
+            }
+        });
+    }) 
+    $(document).on("click", "#unsavedArticles", function() {
+        $("#articles").empty()
+        $.getJSON("/articles/unsaved", function(data) {
+            // For each one
+            for (var i = 0; i < data.length; i++) {
+            // Display the apropos information on the page
+            $("#articles").append("<div class='articlediv'> <p data-id='" + data[i]._id + "'>" + data[i].title + "<button class='savebutton' button_id="+data[i]._id+">Save Article</button><button class='notebutton' data_id="+data[i]._id+">Leave Note</button><br />" + data[i].link + "</p>"+"<div class='modal' id='myModal'><div class='modal-content'>"+"<span class='close'>&times;</span>Update Notes</div><textarea id='bodyinput' name='body'></textarea><button data_id='" + data[i]._id + "' id='savenote'>Save Note</button></div></div>");
+            }
+        });
+    })    
     // Whenever someone clicks a p tag
     $(document).on("click", ".notebutton", function() {
         // Empty the notes from the note section
-        console.log("1")
         // $("#notes").empty();
         // Save the id from the p tag
-        console.log("2")
         thisId = $(this).attr("data_id");
-        console.log("1:"+$(this).attr("data_id"))
-        console.log("2:"+this)
-        console.log("3:"+thisId)
-
         var modal = document.getElementById('myModal');
         var span = document.getElementsByClassName("close")[0];
         modal.style.display = "block";
         span.onclick = function() {
             modal.style.display = "none";
-            // $("#notes").empty();
         }
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
-                // $("#notes").empty();
             }
         }
         // Now make an ajax call for the Article
@@ -54,16 +67,16 @@ $.getJSON("/articles", function(data) {
         });
     });
     
-    // When you click the savenote button
+    // When you click the button to save a note
     $(document).on("click", "#savenote", function() {
         // Grab the id associated with the article from the submit button
         console.log("Save ID is: " + $(this).attr("data_id"))
-        var saveId = $(this).attr("data_id");
-        console.log("Save ID is: " + saveId)
+        thisId = $(this).attr("data_id");
+        console.log("Save ID is: " + thisId)
         // Run a POST request to change the note, using what's entered in the inputs
         $.ajax({
         method: "POST",
-        url: "/articles/" + saveId,
+        url: "/articles/" + thisId,
         data: {
             // Value taken from title input
             // title: $("#titleinput").val(),
@@ -78,25 +91,19 @@ $.getJSON("/articles", function(data) {
             // Empty the notes section
             // $("#notes").empty();
         });
-    
-        // Also, remove the values entered in the input and textarea for note entry
-        $("#titleinput").val("");
-        $("#bodyinput").val("");
     });
 
+    // When you click button to save an article
     $(document).on("click", ".savebutton", function() {
         // Grab the id associated with the article from the submit button
         console.log("save button is working")
-        var buttonId = $(this).attr("button_id");
-        console.log(buttonId)
-        // Run a POST request to change the note, using what's entered in the inputs
+        thisId = $(this).attr("button_id");
+        console.log(thisId)
+        // Run a PUT request to update the value of the saved field to false
         $.ajax({
         method: "PUT",
-        url: "/articles/" + buttonId,
+        url: "/articles/" + thisId,
         data: {
-            // Value taken from title input
-            // title: $("#titleinput").val(),
-            // Value taken from note textarea
             saved: true
         }
         })
@@ -104,11 +111,31 @@ $.getJSON("/articles", function(data) {
         .then(function(data) {
             // Log the response
             console.log(data);
-            // Empty the notes section
+            $("#unsavedArticles").trigger("click");    
         });
-    
-        // Also, remove the values entered in the input and textarea for note entry
-        $("#titleinput").val("");
-        $("#bodyinput").val("");
+    });
+
+    // When you click button to unsave an article
+    $(document).on("click", ".unsavebutton", function() {
+        // Grab the id associated with the article from the submit button
+        console.log("This is data returnes from the unsave function 1:");
+        thisId = $(this).attr("button_id");
+        // Run a PUT request to update the value of the saved field to false
+        console.log(thisId)
+        $.ajax({
+        method: "PUT",
+        url: "/articles/" + thisId,
+        data: {
+            saved: false
+        }
+        })
+        // With that done
+        .then(function(data) {
+            // Log the response
+            console.log("This is data returned from the unsave function 2: "+thisId);
+            // Empty the notes section
+            $(this).empty()
+            $("#savedArticles").trigger("click");
+        });
     });
 })

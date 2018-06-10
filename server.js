@@ -26,6 +26,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
 
+var exphbs = require("express-handlebars");
+
+app.engine("handlebars", exphbs({defaultLayout: "main"}));
+app.set("view engine", "handlebars");
+
 // Connect to the Mongo DB
 mongoose.connect("mongodb://localhost/CheerioOlMongoose");
 
@@ -71,18 +76,33 @@ app.get("/scrape", function(req, res) {
 });
 
 // Route for getting all Articles from the db
-app.get("/articles", function(req, res) {
+app.get("/articles/saved", function(req, res) {
   // Grab every document in the Articles collection
-  db.Article.find({})
+  console.log("The saved articles route is working")
+  db.Article.find({saved: true})
     .then(function(dbArticle) {
       // If we were able to successfully find Articles, send them back to the client
       res.json(dbArticle);
+      console.log(dbArticle)
     })
     .catch(function(err) {
       // If an error occurred, send it to the client
       res.json(err);
     });
 });
+
+app.get("/articles/unsaved", function(req, res) {
+    // Grab every document in the Articles collection
+    db.Article.find({saved: false})
+      .then(function(dbArticle) {
+        // If we were able to successfully find Articles, send them back to the client
+        res.json(dbArticle);
+      })
+      .catch(function(err) {
+        // If an error occurred, send it to the client
+        res.json(err);
+      });
+  });
 
 // Route for grabbing a specific Article by id, populate it with it's note
 app.get("/articles/:id", function(req, res) {
@@ -124,11 +144,13 @@ app.post("/articles/:id", function(req, res) {
 app.put("/articles/:id", function(req, res) {
     console.log(req.body.saved)
     console.log(req.params.id)
+    console.log("This is the put route for changing saved")
     db.Article.update({_id: req.params.id}, {$set: {saved: req.body.saved}})
     .then(function(dbArticle) {
     // If we were able to successfully update an Article, send it back to the client
     console.log(dbArticle)
-    // res.json(dbArticle);
+    console.log("This is the put route return " + dbArticle._id)
+    res.json(dbArticle);
     })
     .catch(function(err) {
     // If an error occurred, send it to the client

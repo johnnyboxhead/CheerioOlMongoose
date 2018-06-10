@@ -3,7 +3,13 @@
     box-shadow: 2px 2px 2px black;
 }
 
+
+
 .savebutton{
+    float: right;
+}
+
+.unsavebutton{
     float: right;
 }
 

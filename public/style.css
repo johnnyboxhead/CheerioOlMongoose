@@ -1,24 +1,31 @@
-.articlediv {
-    background-color: rgb(44, 130, 241);
-    box-shadow: 2px 2px 2px black;
+body{
+    background: url("OuterBanks.jpg") no-repeat center center; 
 }
 
-
+.articlediv {
+    box-shadow: 2px 2px 2px black;
+    background-color: whitesmoke;
+    opacity: 1;
+}
 
 .savebutton{
     float: right;
+    box-shadow: 1px 1px 1px black;
 }
 
 .unsavebutton{
     float: right;
+    box-shadow: 1px 1px 1px black;
 }
 
 .notebutton{
     float: right;
+    box-shadow: 1px 1px 1px black;
 }
 
 [data-id] {
-    background-color: green;
+    opacity: 1;
+    color: black;
 }
 
 .modal {
@@ -35,6 +42,8 @@
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+#myModal{
+}
 /* Modal Content */
 .modal-content {
     background-color: #fefefe;
